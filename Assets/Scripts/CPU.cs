@@ -27,7 +27,7 @@ public class CPU : MonoBehaviour
     void CPUWinRound()
     {
         string word = string.Empty;
-        for(int i =0; i< CardManager.instance.randomLetters.Count; i++)
+        for(int i = 0; i< CardManager.instance.randomLetters.Count; i++)
         {
             word += CardManager.instance.randomLetters[i];
         }

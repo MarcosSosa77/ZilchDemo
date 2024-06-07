@@ -17,6 +17,7 @@ public class UIManager : MonoBehaviour
     public TMP_Text playerCards;
     public TMP_Text cpuCards;
     public TMP_Text dealerCards;
+    public TMP_Text message;
 
     public GameObject minLetterWarning;
 
@@ -29,6 +30,7 @@ public class UIManager : MonoBehaviour
 
     public float timer;
     public bool isTimerRunning;
+    public string correctWord, wrongWord;
 
     private void Awake()
     {
@@ -64,6 +66,9 @@ public class UIManager : MonoBehaviour
             if(timer <= 0)
             {
                 isTimerRunning = false;
+                timer = 30;
+                CardManager.instance.ResetCards();
+                Player.Instance.NextRound();
             }
         }
     }

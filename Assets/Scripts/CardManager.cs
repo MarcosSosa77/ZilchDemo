@@ -34,6 +34,9 @@ public class CardManager : MonoBehaviour
 
     public void Zilch()
     {
+        if(!UIManager.Instance.isTimerRunning)
+            return;
+
         string word = string.Empty;
         for (int i = 0; i < randomLetters.Count; i++)
         {
@@ -71,8 +74,29 @@ public class CardManager : MonoBehaviour
         UIManager.Instance.playerCards.text = Player.Instance.totalCollectedCards.ToString();
     }
 
+    public void ResetCards()
+    {
+        for (int i = 0; i < randomLetters.Count; i++)
+        {
+            deck.Add(randomLetters[i]);
+        }
+
+        randomLetters.Clear();
+    }
+
     public IEnumerator CardAddOnTable()
     {
+        Debug.Log("CardAddOnTable");
+
+        UIManager.Instance.cards = new();
+        for (int i = 0;i < UIManager.Instance.tableCards.Count; i++)
+        {
+            UIManager.Instance.cards.Add(UIManager.Instance.tableCards[i]);
+        }
+
+        for(int i = 0; i < UIManager.Instance.tableCards.Count; i++)
+            UIManager.Instance.tableCards[i].gameObject.SetActive(false);
+
         for (int i = 0; i < UIManager.Instance.cards.Count; i++)
         {
             int random = Random.Range(0, deck.Count);
@@ -105,6 +129,8 @@ public class CardManager : MonoBehaviour
                 }
             }
             Debug.Log("no possible word");
+            UIManager.Instance.message.text = UIManager.Instance.wrongWord;
+            UIManager.Instance.message.gameObject.SetActive(true);
         }
         else
         {
@@ -113,10 +139,11 @@ public class CardManager : MonoBehaviour
             else
             {
                 Debug.Log("no possible word");
+                UIManager.Instance.message.text = UIManager.Instance.wrongWord;
+                UIManager.Instance.message.gameObject.SetActive(true);
             }
         }
     }
-
 }
 
 public static class ListExtensions

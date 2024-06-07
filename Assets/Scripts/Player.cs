@@ -20,6 +20,9 @@ public class Player : MonoBehaviour
 
     public void Submit()
     {
+        if(!UIManager.Instance.isTimerRunning)
+            return;
+
         word = string.Empty;
         if (selectedLetters >= 4)
         {
@@ -27,7 +30,6 @@ public class Player : MonoBehaviour
             {
                 word += UIManager.Instance.playerWord[i].text;
             }
-            Debug.Log(word);
             UIManager.Instance.submitButton.interactable = false;
             CardManager.instance.WordCheck(TrueWord, word);
             time = UIManager.Instance.timer;
@@ -44,6 +46,9 @@ public class Player : MonoBehaviour
         {
             totalCollectedCards += selectedLetters;
             UIManager.Instance.playerCards.text = totalCollectedCards.ToString();
+
+            UIManager.Instance.message.text = UIManager.Instance.correctWord;
+            UIManager.Instance.message.gameObject.SetActive(true);
         }
         else
         {
@@ -52,8 +57,19 @@ public class Player : MonoBehaviour
             {
                 UIManager.Instance.cpuTotalCards += letters.Length;
                 UIManager.Instance.cpuCards.text = UIManager.Instance.cpuTotalCards.ToString();
+
+                UIManager.Instance.message.text = UIManager.Instance.wrongWord;
+                UIManager.Instance.message.gameObject.SetActive(true);
+            }
+            else
+            {
+                totalCollectedCards += selectedLetters;
+                UIManager.Instance.playerCards.text = totalCollectedCards.ToString();
+                UIManager.Instance.message.text = UIManager.Instance.correctWord;
+                UIManager.Instance.message.gameObject.SetActive(true);
             }
         }
+
         System.Collections.Generic.List<string> stringList = new();
         for (int i = 0; i < selectedLetters; i++)
         {
@@ -64,11 +80,22 @@ public class Player : MonoBehaviour
             CardManager.instance.randomLetters.Remove(item);
         }
 
+        CardManager.instance.ResetCards();
+
         foreach (var card in UIManager.Instance.cards)
         {
             card.transform.SetAsLastSibling();
             card.gameObject.SetActive(false);
         }
+
+        UIManager.Instance.timer = 30;
+        UIManager.Instance.isTimerRunning = false;
+
+        StartCoroutine(NextRound(3));
+    }
+
+    public void NextRound()
+    {
         StartCoroutine(NextRound(3));
     }
 
@@ -82,5 +109,7 @@ public class Player : MonoBehaviour
         {
             UIManager.Instance.playerWord[i].text = string.Empty;
         }
+
+        UIManager.Instance.message.gameObject.SetActive(false);
     }
 }
