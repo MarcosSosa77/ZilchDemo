@@ -11,6 +11,8 @@ public class Player : MonoBehaviour
 
     public string word;
 
+    public float time;
+
     private void Awake()
     {
         Instance = this;
@@ -27,7 +29,8 @@ public class Player : MonoBehaviour
             }
             Debug.Log(word);
             UIManager.Instance.submitButton.interactable = false;
-            StartCoroutine(CardManager.instance.WordChecker(TrueWord));
+            CardManager.instance.WordCheck(TrueWord, word);
+            time = UIManager.Instance.timer;
         }
         else
         {
@@ -37,10 +40,22 @@ public class Player : MonoBehaviour
 
     public void TrueWord()
     {
-        totalCollectedCards += selectedLetters;
-        UIManager.Instance.playerCards.text = totalCollectedCards.ToString();
+        if (time < UIManager.Instance.cpu.time)
+        {
+            totalCollectedCards += selectedLetters;
+            UIManager.Instance.playerCards.text = totalCollectedCards.ToString();
+        }
+        else
+        {
+            char[] letters = UIManager.Instance.cpu.cpuWord.ToCharArray();
+            if(UIManager.Instance.cpu.isCPUTrue)
+            {
+                UIManager.Instance.cpuTotalCards += letters.Length;
+                UIManager.Instance.cpuCards.text = UIManager.Instance.cpuTotalCards.ToString();
+            }
+        }
         System.Collections.Generic.List<string> stringList = new();
-        for(int i =0; i < selectedLetters; i++)
+        for (int i = 0; i < selectedLetters; i++)
         {
             stringList.Add(UIManager.Instance.playerWord[i].text);
         }

@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,6 +8,7 @@ public class UIManager : MonoBehaviour
 {
     public static UIManager Instance;
 
+    public CPU cpu;
     public List<Card> tableCards;
 
     public List<TMP_Text> playerWord;
@@ -16,11 +16,19 @@ public class UIManager : MonoBehaviour
     public Button submitButton;
     public TMP_Text playerCards;
     public TMP_Text cpuCards;
+    public TMP_Text dealerCards;
 
     public GameObject minLetterWarning;
 
     [Tooltip("At runtime getting cards that need to change")]
     public List<Card> cards;
+
+    public int cpuTotalCards;
+
+    public TMP_Text remainingTime;
+
+    public float timer;
+    public bool isTimerRunning;
 
     private void Awake()
     {
@@ -36,6 +44,28 @@ public class UIManager : MonoBehaviour
         {
             cards.Add(tableCards[i]);
         }
+        cpuTotalCards = 0;
+    }
+
+    private void Start()
+    {
+        dealerCards.text = CardManager.instance.deck.Count.ToString();
+    }
+
+    private void Update()
+    {
+        if(isTimerRunning)
+        {
+            timer -= Time.deltaTime;
+            int min = (int)(timer / 60);
+            int sec = (int)(timer % 60);
+            remainingTime.text = string.Format("{0:00}:{1:00}", min, sec);
+
+            if(timer <= 0)
+            {
+                isTimerRunning = false;
+            }
+        }
     }
 
     public IEnumerator MinLetterWaning()
@@ -44,5 +74,4 @@ public class UIManager : MonoBehaviour
         yield return new WaitForSeconds(3);
         minLetterWarning.SetActive(false);
     }
-
 }

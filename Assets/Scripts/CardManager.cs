@@ -1,18 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
 
 public class CardManager : MonoBehaviour
 {
     public static CardManager instance;
+
+    public WordChecker wordChecker;
 
     public List<DeckList> cardList;
 
     public List<string> deck;
     public List<string> randomLetters;
 
-    const string baseURL = "https://api.dictionaryapi.dev/api/v2/entries/en/";
+    private bool isValid;
 
     private void Awake()
     {
@@ -33,8 +34,18 @@ public class CardManager : MonoBehaviour
 
     public void Zilch()
     {
-        Player.Instance.totalCollectedCards += randomLetters.Count;
-        UIManager.Instance.playerCards.text = Player.Instance.totalCollectedCards.ToString();
+        string word = string.Empty;
+        for (int i = 0; i < randomLetters.Count; i++)
+        {
+            word += randomLetters[i];
+        }
+        wordChecker.IsWordPossible(word);
+        if(wordChecker.words.Count == 0)
+        {
+            WordCheckingFalse();
+        }
+        else
+            WordCheckingTrue();
         StartCoroutine(Player.Instance.NextRound(0.2f));
         randomLetters = new();
         UIManager.Instance.cards = new();
@@ -46,7 +57,18 @@ public class CardManager : MonoBehaviour
         {
             UIManager.Instance.cards.Add(UIManager.Instance.tableCards[i]);
         }
-        StartCoroutine(CardAddOnTable());
+    }
+
+    public void WordCheckingTrue()
+    {
+        UIManager.Instance.cpuTotalCards += randomLetters.Count;
+        UIManager.Instance.cpuCards.text = UIManager.Instance.cpuTotalCards.ToString();
+    }
+
+    public void WordCheckingFalse()
+    {
+        Player.Instance.totalCollectedCards += randomLetters.Count;
+        UIManager.Instance.playerCards.text = Player.Instance.totalCollectedCards.ToString();
     }
 
     public IEnumerator CardAddOnTable()
@@ -59,31 +81,39 @@ public class CardManager : MonoBehaviour
             UIManager.Instance.cards[i].gameObject.SetActive(true);
             UIManager.Instance.cards[i].cardBtn.interactable = true;
             deck.RemoveAt(random);
+            UIManager.Instance.dealerCards.text = deck.Count.ToString();
             yield return new WaitForSeconds(0.5f);
         }
         UIManager.Instance.cards.Clear();
+        UIManager.Instance.isTimerRunning = true;
     }
 
-
-    public IEnumerator WordChecker(System.Action success)
+    public void WordCheck(System.Action success, string words)
     {
-        using UnityWebRequest request = UnityWebRequest.Get(baseURL + Player.Instance.word);
-        //request.SetRequestHeader("Content-Type", "application/json");
-        //request.SetRequestHeader("Accept", "application/json");
-        yield return request.SendWebRequest();
-
-        if (string.IsNullOrEmpty(request.error))
+        isValid = false;
+        if (words.Contains('?'))
         {
-            Debug.Log(request.downloadHandler.text);
-
-            if (request.downloadHandler.text.Contains("words"))
-                Debug.Log("true");
-            success.Invoke();
-
+            List<string> expandedWords = wordChecker.ExpandWordWithWildcards(words);
+            foreach (string word in expandedWords)
+            {
+                isValid = wordChecker.dictionary.Contains(word.ToLower());
+                Debug.Log($"Is '{word}' valid? {isValid}");
+                if (isValid)
+                {
+                    success.Invoke();
+                    return;
+                }
+            }
+            Debug.Log("no possible word");
         }
         else
         {
-            Debug.LogError(request.downloadHandler.text);
+            if (wordChecker.dictionary.Contains(words.ToLower()))
+                success.Invoke();
+            else
+            {
+                Debug.Log("no possible word");
+            }
         }
     }
 
