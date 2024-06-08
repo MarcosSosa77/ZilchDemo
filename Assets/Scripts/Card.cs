@@ -9,7 +9,7 @@ public class Card : MonoBehaviour
 
     public void CardSelect()
     {
-        if (UIManager.Instance.submitButton.interactable && UIManager.Instance.isTimerRunning)
+        if (UIManager.Instance.submitButton.interactable && UIManager.Instance.isTimerRunning && !CardManager.instance.player.isRoundLose)
         {
             UIManager.Instance.playerWord[CardManager.instance.player.selectedLetters].text = cardLetter.text;
             CardManager.instance.player.selectedLetters++;

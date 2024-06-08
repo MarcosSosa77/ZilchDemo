@@ -66,6 +66,15 @@ public class CardManager : MonoBehaviour
 
             player.NextRound(nextRoundTimer);
         }
+        else if(!player.isRoundLose)
+        {
+            player.isRoundLose = true;
+
+            UIManager.Instance.message.text = UIManager.Instance.zilchWrong;
+            UIManager.Instance.message.gameObject.SetActive(true);
+
+            Debug.Log(UIManager.Instance.zilchWrong);
+        }
     }
 
     public void WordCheckingTrue()

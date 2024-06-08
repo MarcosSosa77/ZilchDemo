@@ -35,7 +35,7 @@ public class UIManager : MonoBehaviour
 
     public float timer;
     public bool isTimerRunning;
-    public string correctWord, wrongWord, zilchRound, cpuWrongWord, cpuWrongWordPlayerWrongWord, cpuCorrectWord, winnerPlayer, losePlayer, zilchPlayer;
+    public string correctWord, wrongWord, zilchRound, zilchWrong, cpuWrongWord, cpuWrongWordPlayerWrongWord, cpuCorrectWord, winnerPlayer, losePlayer, zilchPlayer;
 
     private void Awake()
     {

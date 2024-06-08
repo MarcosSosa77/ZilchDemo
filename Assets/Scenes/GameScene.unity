@@ -3184,6 +3184,7 @@ MonoBehaviour:
   correctWord: Good Job. You are Awesome!
   wrongWord: Ohh Sorry. Better Luck next Round!
   zilchRound: Zilch, You are amazing!
+  zilchWrong: Zilch goes wrong, Better Luck next Round!
   cpuWrongWord: CPU lose round, you have a chance to win!
   cpuWrongWordPlayerWrongWord: CPU lose round!
   cpuCorrectWord: CPU won round, Better Luck next Round!
