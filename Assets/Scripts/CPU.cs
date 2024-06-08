@@ -1,42 +1,52 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class CPU : MonoBehaviour
 {
-    [Tooltip("how much percentage it sholud do before player")]
+    [Header("How much percentage it should win from 100%")]
     public int percentage;
-
     public float time;
     public string cpuWord;
-
     public int totalCollectedCards;
-
     public bool isCPUTrue;
 
     public void CPUPlay()
     {
         int random = Random.Range(0, 100);
-        if(random < percentage)
-        {
-            CPUWinRound();
-        }
-        else
-        {
-            CPULoseRound();
-        }
+        // if(random < percentage)
+        // {
+        //     CPUWinRound();
+        // }
+        // else
+        // {
+        //     CPULoseRound();
+        // }
+        CPUWinRound();
     }
 
     void CPUWinRound()
     {
         string word = string.Empty;
-        for(int i = 0; i< CardManager.instance.randomLetters.Count; i++)
+        for(int i = 0; i < CardManager.instance.randomLetters.Count; i++)
         {
             word += CardManager.instance.randomLetters[i];
         }
-        CardManager.instance.wordChecker.IsWordPossible(word);
-        time = UIManager.Instance.timer;
-        cpuWord = CardManager.instance.wordChecker.words[0];
-        isCPUTrue = true;
+        time = Random.Range(0, 30);
+        if(CardManager.instance.wordExist.validWords.Count > 0)
+        {
+            isCPUTrue = true;
+            cpuWord = CardManager.instance.wordExist.validWords[Random.Range(0, CardManager.instance.wordExist.validWords.Count - 1)];
+        } 
+
+        StartCoroutine(WinRound(time));  
+    }
+
+    IEnumerator WinRound(float sec)
+    {
+        yield return new WaitForSeconds(sec);
+
+        
     }
 
     void CPULoseRound()
@@ -44,7 +54,7 @@ public class CPU : MonoBehaviour
         List<string> words = new();
         for (int i = 0; i < CardManager.instance.randomLetters.Count; i++)
         {
-            words[i] = CardManager.instance.randomLetters[i];
+            words.Add(CardManager.instance.randomLetters[i]);
         }
         words.Shuffle();
         string word = string.Empty;
@@ -54,7 +64,7 @@ public class CPU : MonoBehaviour
         }
         cpuWord = word;
         isCPUTrue = false;
-        CardManager.instance.WordCheck(CPUWordFind, cpuWord);
+        //CardManager.instance.WordCheck(CPUWordFind, cpuWord);
     }
 
     void CPUWordFind()

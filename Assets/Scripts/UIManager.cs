@@ -34,7 +34,7 @@ public class UIManager : MonoBehaviour
 
     public float timer;
     public bool isTimerRunning;
-    public string correctWord, wrongWord, winnerPlayer, losePlayer;
+    public string correctWord, wrongWord, winnerPlayer, losePlayer, zilchPlayer;
 
     private void Awake()
     {
@@ -51,6 +51,8 @@ public class UIManager : MonoBehaviour
             cards.Add(tableCards[i]);
         }
         cpuTotalCards = 0;
+
+        timer = CardManager.instance.roundTimer;
     }
 
     private void Start()
@@ -70,9 +72,9 @@ public class UIManager : MonoBehaviour
             if(timer <= 0)
             {
                 isTimerRunning = false;
-                timer = 30;
+                timer = CardManager.instance.roundTimer;;
                 CardManager.instance.ResetCards();
-                CardManager.instance.player.NextRound(3);
+                CardManager.instance.player.NextRound(CardManager.instance.nextRoundTimer);
             }
         }
     }

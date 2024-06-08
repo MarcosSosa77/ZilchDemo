@@ -21,6 +21,7 @@ public class WordChecker : MonoBehaviour
         int maxLength = 8;
         words = new();
         List<string> validWords = GetValidWords(letters, minLength, maxLength);
+        Debug.Log("validWords - " + validWords.Count);
         foreach (string word in validWords)
         {
             Debug.Log(word);
@@ -35,14 +36,16 @@ public class WordChecker : MonoBehaviour
 
         if (dictionaryTextAsset != null)
         {
-            using (StringReader reader = new(dictionaryTextAsset.text))
+            using StringReader reader = new(dictionaryTextAsset.text);
+            string word;
+            while ((word = reader.ReadLine()) != null)
             {
-                string word;
-                while ((word = reader.ReadLine()) != null)
+                if (word.Length >= 4 && word.Length <= 8)
                 {
                     dictionary.Add(word.ToLower());
                 }
             }
+            Debug.Log("Dictionary contains " + dictionary.Count + " words.");
         }
         else
         {
@@ -90,7 +93,6 @@ public class WordChecker : MonoBehaviour
         return results;
     }
 
-
     public List<string> ExpandWordWithOneWildcard(string word)
     {
         List<string> results = new() { word };
@@ -105,7 +107,7 @@ public class WordChecker : MonoBehaviour
                 {
                     foreach (char c in Alphabet)
                     {
-                        newResults.Add(result.Substring(0, index) + c + result.Substring(index + 1));
+                        newResults.Add(result[..index] + c + result[(index + 1)..]);
                     }
                 }
                 else
@@ -156,5 +158,3 @@ public class WordChecker : MonoBehaviour
         }
     }
 }
-
-

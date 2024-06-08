@@ -42,6 +42,7 @@ public class Player : MonoBehaviour
 
             UIManager.Instance.message.text = UIManager.Instance.correctWord;
             UIManager.Instance.message.gameObject.SetActive(true);
+            Debug.Log(UIManager.Instance.correctWord);
         }
         else
         {
@@ -53,6 +54,7 @@ public class Player : MonoBehaviour
 
                 UIManager.Instance.message.text = UIManager.Instance.wrongWord;
                 UIManager.Instance.message.gameObject.SetActive(true);
+                Debug.Log(UIManager.Instance.wrongWord);
             }
             else
             {
@@ -60,6 +62,7 @@ public class Player : MonoBehaviour
                 UIManager.Instance.playerCards.text = totalCollectedCards.ToString();
                 UIManager.Instance.message.text = UIManager.Instance.correctWord;
                 UIManager.Instance.message.gameObject.SetActive(true);
+                Debug.Log(UIManager.Instance.correctWord);
             }
         }
 
@@ -81,7 +84,7 @@ public class Player : MonoBehaviour
             card.gameObject.SetActive(false);
         }
 
-        UIManager.Instance.timer = 30;
+        UIManager.Instance.timer = CardManager.instance.roundTimer;;
         UIManager.Instance.isTimerRunning = false;
 
         NextRound(3);
@@ -96,7 +99,5 @@ public class Player : MonoBehaviour
         {
             UIManager.Instance.playerWord[i].text = string.Empty;
         }
-
-        UIManager.Instance.message.gameObject.SetActive(false);
     }
 }
