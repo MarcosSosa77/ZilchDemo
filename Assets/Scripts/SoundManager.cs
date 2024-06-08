@@ -11,9 +11,7 @@ public enum SoundType
     BUTTON_PRESS,
     ZILCH,
     SHUFFLE_AND_DELIVER
-   
 }
-
 
 [RequireComponent(typeof(AudioSource)), ExecuteInEditMode]
 public class SoundManager : MonoBehaviour
@@ -24,7 +22,6 @@ public class SoundManager : MonoBehaviour
     public AudioSource audSource;
     [SerializeField] private AudioSource buttonAudioSource;//for pitched increased
     [SerializeField] private AudioSource musicAudioSource;
-
 
     private float originalPitch = 1f;
     private float gemPitch = 1f;
@@ -38,11 +35,7 @@ public class SoundManager : MonoBehaviour
 
         musicAudioSource.loop = true;
         musicAudioSource.volume = 0.05f;
-
-
     }
-
-
 
     //Sound type and volume
     public void PlaySound(SoundType sound, float vol = 0.5f)
@@ -58,9 +51,6 @@ public class SoundManager : MonoBehaviour
     {
         audSource.Stop();
     }
-
-
-
 
     public void PlaybuttonPressedSound()
     {
@@ -107,7 +97,6 @@ public class SoundManager : MonoBehaviour
     }
 
 
-
 #if UNITY_EDITOR
     private void OnEnable()
     {
@@ -117,8 +106,6 @@ public class SoundManager : MonoBehaviour
         {
             soundList[i].name = names[i];
         }
-
-
     }
 #endif
 }

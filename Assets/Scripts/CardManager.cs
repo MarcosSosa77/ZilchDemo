@@ -106,10 +106,12 @@ public class CardManager : MonoBehaviour
             if(player.totalCollectedCards > cPU.totalCollectedCards)
             {
                 UIManager.Instance.winnerText.text = UIManager.Instance.winnerPlayer;
+                SoundManager.instance.PlaySound(SoundType.WIN_MATCH, 1f);
             }
             else
             {
                 UIManager.Instance.winnerText.text = UIManager.Instance.losePlayer;
+                SoundManager.instance.PlaySound(SoundType.LOSE_MATCH, 1f);
             }
             UIManager.Instance.resultScreen.SetActive(true);
         }
@@ -147,7 +149,7 @@ public class CardManager : MonoBehaviour
                 randomLetters.Add(deck[random]);
                 deck.RemoveAt(random);
                 UIManager.Instance.dealerCards.text = deck.Count.ToString();
-                yield return new WaitForSeconds(0.25f);
+                yield return new WaitForSeconds(0.2f);
             }
             wordExist.CheckWord();
             cPU.CPUPlay();

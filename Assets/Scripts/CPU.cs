@@ -83,7 +83,7 @@ public class CPU : MonoBehaviour
         UIManager.Instance.message.text = UIManager.Instance.cpuCorrectWord;
         UIManager.Instance.message.gameObject.SetActive(true);
         Debug.Log(UIManager.Instance.cpuCorrectWord);
-        SoundManager.instance.PlaySound(SoundType.LOSE_MATCH, 1f);
+        SoundManager.instance.PlaySound(SoundType.LOSE_ROUND, 1f);
 
         UIManager.Instance.timer = CardManager.instance.roundTimer;
 
