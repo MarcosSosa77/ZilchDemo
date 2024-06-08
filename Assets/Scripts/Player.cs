@@ -33,6 +33,7 @@ public class Player : MonoBehaviour
             {
                 UIManager.Instance.message.text = UIManager.Instance.wrongWord;
                 UIManager.Instance.message.gameObject.SetActive(true);
+                SoundManager.instance.PlaySound(SoundType.LOSE_ROUND, 1.0f);
 
                 Debug.Log(UIManager.Instance.wrongWord);
 
@@ -74,6 +75,7 @@ public class Player : MonoBehaviour
         UIManager.Instance.message.text = UIManager.Instance.correctWord;
         UIManager.Instance.message.gameObject.SetActive(true);
         Debug.Log(UIManager.Instance.correctWord);
+        SoundManager.instance.PlaySound(SoundType.WIN_ROUND, 1f);
 
         List<string> stringList = new();
         for (int i = 0; i < selectedLetters; i++)

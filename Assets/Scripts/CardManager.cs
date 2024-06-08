@@ -127,6 +127,8 @@ public class CardManager : MonoBehaviour
             UIManager.Instance.message.gameObject.SetActive(false);
 
             deck.Shuffle();
+            SoundManager.instance.PlaySound(SoundType.SHUFFLE_AND_DELIVER, 1f);
+
             UIManager.Instance.cards = new();
             for (int i = 0;i < UIManager.Instance.tableCards.Count; i++)
             {

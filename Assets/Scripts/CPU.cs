@@ -51,6 +51,7 @@ public class CPU : MonoBehaviour
         } 
 
         Debug.Log("CPU will win round in " + time + "s with " + cpuWord + " word!");
+        //SoundManager.instance.PlaySound(SoundType.LOSE_MATCH);
 
         StartCoroutine(WinRound(time));  
     }
@@ -82,6 +83,7 @@ public class CPU : MonoBehaviour
         UIManager.Instance.message.text = UIManager.Instance.cpuCorrectWord;
         UIManager.Instance.message.gameObject.SetActive(true);
         Debug.Log(UIManager.Instance.cpuCorrectWord);
+        SoundManager.instance.PlaySound(SoundType.LOSE_MATCH, 1f);
 
         UIManager.Instance.timer = CardManager.instance.roundTimer;
 
@@ -129,6 +131,7 @@ public class CPU : MonoBehaviour
             UIManager.Instance.message.text = UIManager.Instance.cpuWrongWordPlayerWrongWord;
             UIManager.Instance.message.gameObject.SetActive(true);
             Debug.Log(UIManager.Instance.cpuWrongWordPlayerWrongWord);
+            SoundManager.instance.PlaySound(SoundType.WIN_ROUND, 1f);
         }
         else
         {
