@@ -11,8 +11,8 @@ public class Card : MonoBehaviour
     {
         if (UIManager.Instance.submitButton.interactable && UIManager.Instance.isTimerRunning)
         {
-            UIManager.Instance.playerWord[Player.Instance.selectedLetters].text = cardLetter.text;
-            Player.Instance.selectedLetters++;
+            UIManager.Instance.playerWord[CardManager.instance.player.selectedLetters].text = cardLetter.text;
+            CardManager.instance.player.selectedLetters++;
             UIManager.Instance.cards.Add(this);
             cardBtn.interactable = false;
             GetComponent<Outline>().enabled = true;

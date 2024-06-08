@@ -9,6 +9,8 @@ public class CPU : MonoBehaviour
     public float time;
     public string cpuWord;
 
+    public int totalCollectedCards;
+
     public bool isCPUTrue;
 
     public void CPUPlay()

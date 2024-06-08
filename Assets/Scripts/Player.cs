@@ -3,8 +3,6 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public static Player Instance;
-
     public int totalCollectedCards;
 
     public int selectedLetters;
@@ -12,11 +10,6 @@ public class Player : MonoBehaviour
     public string word;
 
     public float time;
-
-    private void Awake()
-    {
-        Instance = this;
-    }
 
     public void Submit()
     {
@@ -42,7 +35,7 @@ public class Player : MonoBehaviour
 
     public void TrueWord()
     {
-        if (time < UIManager.Instance.cpu.time)
+        if (time < CardManager.instance.cPU.time)
         {
             totalCollectedCards += selectedLetters;
             UIManager.Instance.playerCards.text = totalCollectedCards.ToString();
@@ -52,8 +45,8 @@ public class Player : MonoBehaviour
         }
         else
         {
-            char[] letters = UIManager.Instance.cpu.cpuWord.ToCharArray();
-            if(UIManager.Instance.cpu.isCPUTrue)
+            char[] letters = CardManager.instance.cPU.cpuWord.ToCharArray();
+            if(CardManager.instance.cPU.isCPUTrue)
             {
                 UIManager.Instance.cpuTotalCards += letters.Length;
                 UIManager.Instance.cpuCards.text = UIManager.Instance.cpuTotalCards.ToString();
@@ -91,18 +84,12 @@ public class Player : MonoBehaviour
         UIManager.Instance.timer = 30;
         UIManager.Instance.isTimerRunning = false;
 
-        StartCoroutine(NextRound(3));
+        NextRound(3);
     }
 
-    public void NextRound()
+    public void NextRound(float sec)
     {
-        StartCoroutine(NextRound(3));
-    }
-
-    public IEnumerator NextRound(float sec)
-    {
-        yield return new WaitForSeconds(sec);
-        StartCoroutine(CardManager.instance.CardAddOnTable());
+        StartCoroutine(CardManager.instance.CardAddOnTable(sec));
         UIManager.Instance.submitButton.interactable = true;
         selectedLetters = 0;
         for (int i = 0; i < UIManager.Instance.playerWord.Count; i++)

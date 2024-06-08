@@ -13,6 +13,9 @@ public class CardManager : MonoBehaviour
     public List<string> deck;
     public List<string> randomLetters;
 
+    public Player player;
+    public CPU cPU;
+
     private bool isValid;
 
     private void Awake()
@@ -28,8 +31,7 @@ public class CardManager : MonoBehaviour
 
     void Start()
     {
-        deck.Shuffle();
-        StartCoroutine(CardAddOnTable());
+        StartCoroutine(CardAddOnTable(3));
     }
 
     public void Zilch()
@@ -49,7 +51,7 @@ public class CardManager : MonoBehaviour
         }
         else
             WordCheckingTrue();
-        StartCoroutine(Player.Instance.NextRound(0.2f));
+        player.NextRound(3);
         randomLetters = new();
         UIManager.Instance.cards = new();
         foreach (var item in UIManager.Instance.tableCards)
@@ -70,8 +72,8 @@ public class CardManager : MonoBehaviour
 
     public void WordCheckingFalse()
     {
-        Player.Instance.totalCollectedCards += randomLetters.Count;
-        UIManager.Instance.playerCards.text = Player.Instance.totalCollectedCards.ToString();
+        player.totalCollectedCards += randomLetters.Count;
+        UIManager.Instance.playerCards.text = player.totalCollectedCards.ToString();
     }
 
     public void ResetCards()
@@ -84,32 +86,58 @@ public class CardManager : MonoBehaviour
         randomLetters.Clear();
     }
 
-    public IEnumerator CardAddOnTable()
+    public IEnumerator CardAddOnTable(float sec)
     {
         Debug.Log("CardAddOnTable");
 
-        UIManager.Instance.cards = new();
-        for (int i = 0;i < UIManager.Instance.tableCards.Count; i++)
+        if(deck.Count < 8)
         {
-            UIManager.Instance.cards.Add(UIManager.Instance.tableCards[i]);
+            if(player.totalCollectedCards > cPU.totalCollectedCards)
+            {
+                UIManager.Instance.winnerText.text = UIManager.Instance.winnerPlayer;
+            }
+            else
+            {
+                UIManager.Instance.winnerText.text = UIManager.Instance.losePlayer;
+            }
+            UIManager.Instance.resultScreen.SetActive(true);
         }
-
-        for(int i = 0; i < UIManager.Instance.tableCards.Count; i++)
-            UIManager.Instance.tableCards[i].gameObject.SetActive(false);
-
-        for (int i = 0; i < UIManager.Instance.cards.Count; i++)
+        else
         {
-            int random = Random.Range(0, deck.Count);
-            UIManager.Instance.cards[i].cardLetter.text = deck[random];
-            randomLetters.Add(deck[random]);
-            UIManager.Instance.cards[i].gameObject.SetActive(true);
-            UIManager.Instance.cards[i].cardBtn.interactable = true;
-            deck.RemoveAt(random);
-            UIManager.Instance.dealerCards.text = deck.Count.ToString();
-            yield return new WaitForSeconds(0.5f);
+            UIManager.Instance.nextRound.SetActive(true);
+            UIManager.Instance.nextRoundTimer.text = sec.ToString();
+            while(sec > 0)
+            {
+                yield return new WaitForSeconds(1);
+                sec--;
+                UIManager.Instance.nextRoundTimer.text = sec.ToString();
+            }
+            UIManager.Instance.nextRound.SetActive(false);
+
+            deck.Shuffle();
+            UIManager.Instance.cards = new();
+            for (int i = 0;i < UIManager.Instance.tableCards.Count; i++)
+            {
+                UIManager.Instance.cards.Add(UIManager.Instance.tableCards[i]);
+            }
+
+            for(int i = 0; i < UIManager.Instance.tableCards.Count; i++)
+                UIManager.Instance.tableCards[i].gameObject.SetActive(false);
+
+            for (int i = 0; i < UIManager.Instance.cards.Count; i++)
+            {
+                int random = Random.Range(0, deck.Count);
+                UIManager.Instance.cards[i].cardLetter.text = deck[random];
+                randomLetters.Add(deck[random]);
+                UIManager.Instance.cards[i].cardBtn.interactable = true;
+                UIManager.Instance.cards[i].gameObject.SetActive(true);
+                deck.RemoveAt(random);
+                UIManager.Instance.dealerCards.text = deck.Count.ToString();
+                yield return new WaitForSeconds(0.25f);
+            }
+            UIManager.Instance.cards.Clear();
+            UIManager.Instance.isTimerRunning = true;
         }
-        UIManager.Instance.cards.Clear();
-        UIManager.Instance.isTimerRunning = true;
     }
 
     public void WordCheck(System.Action success, string words)

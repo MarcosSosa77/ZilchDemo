@@ -2,13 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
     public static UIManager Instance;
 
-    public CPU cpu;
     public List<Card> tableCards;
 
     public List<TMP_Text> playerWord;
@@ -18,8 +18,12 @@ public class UIManager : MonoBehaviour
     public TMP_Text cpuCards;
     public TMP_Text dealerCards;
     public TMP_Text message;
+    public TMP_Text nextRoundTimer;
+    public TMP_Text winnerText;
 
     public GameObject minLetterWarning;
+    public GameObject nextRound;
+    public GameObject resultScreen;
 
     [Tooltip("At runtime getting cards that need to change")]
     public List<Card> cards;
@@ -30,7 +34,7 @@ public class UIManager : MonoBehaviour
 
     public float timer;
     public bool isTimerRunning;
-    public string correctWord, wrongWord;
+    public string correctWord, wrongWord, winnerPlayer, losePlayer;
 
     private void Awake()
     {
@@ -68,7 +72,7 @@ public class UIManager : MonoBehaviour
                 isTimerRunning = false;
                 timer = 30;
                 CardManager.instance.ResetCards();
-                Player.Instance.NextRound();
+                CardManager.instance.player.NextRound(3);
             }
         }
     }
@@ -78,5 +82,10 @@ public class UIManager : MonoBehaviour
         minLetterWarning.SetActive(true);
         yield return new WaitForSeconds(3);
         minLetterWarning.SetActive(false);
+    }
+
+    public void Restart()
+    {
+        SceneManager.LoadScene("GameScene");
     }
 }
