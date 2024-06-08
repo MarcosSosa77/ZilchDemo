@@ -1,0 +1,11 @@
+# ninja log v5
+3	122	1717849534562418509	FramePacing/CMakeFiles/swappywrapper.dir/UnitySwappyWrapper.cpp.o	5141edc2869d6ba9
+122	262	1717849534668063462	/Users/sagardaingade/Desktop/UnityProjects/BACKROCK/ZilchDemo/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/2k2v2t26/obj/armeabi-v7a/libswappywrapper.so	ae2884413b10288e
+2	507	1717849534944192089	GameActivity/CMakeFiles/game.dir/UGAInputKeyEvent.cpp.o	4b45c1e1a1389f83
+1	511	1717849534950740775	GameActivity/CMakeFiles/game.dir/UGAEntry.cpp.o	e1d1eb54a9378901
+2	551	1717849534990301355	GameActivity/CMakeFiles/game.dir/UGAInputMotionEvent.cpp.o	96f2a2b7718dee11
+2	595	1717849535033691144	GameActivity/CMakeFiles/game.dir/UGASoftKeyboard.cpp.o	172708d85037ac60
+1	630	1717849535069457557	GameActivity/CMakeFiles/game.dir/UGADebug.cpp.o	1c8b49e5cabff230
+1	752	1717849535190430390	GameActivity/CMakeFiles/game.dir/UGAInput.cpp.o	3859cc1ed02a0282
+0	810	1717849535249788073	GameActivity/CMakeFiles/game.dir/UGAApplication.cpp.o	c39eb9d474e2319f
+810	907	1717849535325662912	/Users/sagardaingade/Desktop/UnityProjects/BACKROCK/ZilchDemo/Library/Bee/Android/Prj/IL2CPP/Gradle/unityLibrary/build/intermediates/cxx/RelWithDebInfo/2k2v2t26/obj/armeabi-v7a/libgame.so	ca1439a19b9749bb
