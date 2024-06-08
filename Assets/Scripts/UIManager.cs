@@ -17,6 +17,7 @@ public class UIManager : MonoBehaviour
     public TMP_Text playerCards;
     public TMP_Text cpuCards;
     public TMP_Text dealerCards;
+    public TMP_Text cpuWordTxt;
     public TMP_Text message;
     public TMP_Text nextRoundTimer;
     public TMP_Text winnerText;
@@ -34,7 +35,7 @@ public class UIManager : MonoBehaviour
 
     public float timer;
     public bool isTimerRunning;
-    public string correctWord, wrongWord, winnerPlayer, losePlayer, zilchPlayer;
+    public string correctWord, wrongWord, zilchRound, cpuWrongWord, cpuWrongWordPlayerWrongWord, cpuCorrectWord, winnerPlayer, losePlayer, zilchPlayer;
 
     private void Awake()
     {

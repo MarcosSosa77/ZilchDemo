@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class CPU : MonoBehaviour
@@ -10,19 +11,29 @@ public class CPU : MonoBehaviour
     public string cpuWord;
     public int totalCollectedCards;
     public bool isCPUTrue;
+    public bool isRoundLose;
 
     public void CPUPlay()
     {
+        cpuWord = string.Empty;
+        time = 0;
+        isCPUTrue = false;
+        isRoundLose = false;
+        UIManager.Instance.cpuWordTxt.text = string.Empty;
         int random = Random.Range(0, 100);
-        // if(random < percentage)
-        // {
-        //     CPUWinRound();
-        // }
-        // else
-        // {
-        //     CPULoseRound();
-        // }
-        CPUWinRound();
+        if(random < percentage)
+        {
+            CPUWinRound();
+        }
+        else
+        {
+            CPULoseRound();
+        }
+    }
+
+    public void StopCPU()
+    {
+        StopAllCoroutines();
     }
 
     void CPUWinRound()
@@ -32,21 +43,50 @@ public class CPU : MonoBehaviour
         {
             word += CardManager.instance.randomLetters[i];
         }
-        time = Random.Range(0, 30);
+        time = Random.Range(5, CardManager.instance.roundTimer);
         if(CardManager.instance.wordExist.validWords.Count > 0)
         {
             isCPUTrue = true;
             cpuWord = CardManager.instance.wordExist.validWords[Random.Range(0, CardManager.instance.wordExist.validWords.Count - 1)];
         } 
 
+        Debug.Log("CPU will win round in " + time + "s with " + cpuWord + " word!");
+
         StartCoroutine(WinRound(time));  
     }
 
     IEnumerator WinRound(float sec)
     {
-        yield return new WaitForSeconds(sec);
-
+        float totalWaitTimer = CardManager.instance.roundTimer - sec;
         
+        while(UIManager.Instance.timer > totalWaitTimer)
+        {
+            yield return null;
+        }
+
+        UIManager.Instance.cpuWordTxt.text = cpuWord;
+        UIManager.Instance.isTimerRunning = false;
+
+        yield return new WaitForSeconds(1);
+
+        string[] lettersArray = cpuWord.ToCharArray().Select(c => c.ToString()).ToArray();
+
+        foreach (string item in lettersArray)
+        {
+            CardManager.instance.randomLetters.Remove(item.ToUpper());
+        }
+
+        UIManager.Instance.cpuTotalCards += cpuWord.Length;
+        UIManager.Instance.cpuCards.text = UIManager.Instance.cpuTotalCards.ToString();
+
+        UIManager.Instance.message.text = UIManager.Instance.cpuCorrectWord;
+        UIManager.Instance.message.gameObject.SetActive(true);
+        Debug.Log(UIManager.Instance.cpuCorrectWord);
+
+        UIManager.Instance.timer = CardManager.instance.roundTimer;
+
+        CardManager.instance.ResetCards();
+        CardManager.instance.player.NextRound(CardManager.instance.nextRoundTimer);
     }
 
     void CPULoseRound()
@@ -62,14 +102,49 @@ public class CPU : MonoBehaviour
         {
             word += CardManager.instance.randomLetters[i];
         }
-        cpuWord = word;
+        cpuWord = word[..Random.Range(4, 8)];
+
         isCPUTrue = false;
-        //CardManager.instance.WordCheck(CPUWordFind, cpuWord);
+
+        time = Random.Range(0, CardManager.instance.roundTimer);
+
+        Debug.Log("CPU will lose round in " + time + "s with " + cpuWord + " word!");
+
+        StartCoroutine(LoseRound(time));
     }
 
-    void CPUWordFind()
+    IEnumerator LoseRound(float sec)
     {
-        isCPUTrue = true;
-        time = UIManager.Instance.timer;
+        float totalWaitTimer = CardManager.instance.roundTimer - sec;
+        
+        while(UIManager.Instance.timer > totalWaitTimer)
+        {
+            yield return null;
+        }
+
+        UIManager.Instance.cpuWordTxt.text = cpuWord;
+
+        if(CardManager.instance.player.isRoundLose)
+        {
+            UIManager.Instance.message.text = UIManager.Instance.cpuWrongWordPlayerWrongWord;
+            UIManager.Instance.message.gameObject.SetActive(true);
+            Debug.Log(UIManager.Instance.cpuWrongWordPlayerWrongWord);
+        }
+        else
+        {
+            UIManager.Instance.message.text = UIManager.Instance.cpuWrongWord;
+            UIManager.Instance.message.gameObject.SetActive(true);
+            Debug.Log(UIManager.Instance.cpuWrongWord);
+        }
+
+        isRoundLose = true;
+
+        if(CardManager.instance.player.isRoundLose)
+        {
+            UIManager.Instance.timer = CardManager.instance.roundTimer;
+
+            CardManager.instance.ResetCards();
+            CardManager.instance.player.NextRound(CardManager.instance.nextRoundTimer);
+        }
     }
 }

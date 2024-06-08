@@ -1,19 +1,17 @@
-using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
     public int totalCollectedCards;
-
     public int selectedLetters;
-
     public string word;
-
     public float time;
+    public bool isRoundLose;
 
     public void Submit()
     {
-        if(!UIManager.Instance.isTimerRunning)
+        if(!UIManager.Instance.isTimerRunning || isRoundLose) 
             return;
 
         word = string.Empty;
@@ -24,8 +22,41 @@ public class Player : MonoBehaviour
                 word += UIManager.Instance.playerWord[i].text;
             }
             UIManager.Instance.submitButton.interactable = false;
-            CardManager.instance.WordCheck(TrueWord, word);
+
             time = UIManager.Instance.timer;
+            
+            if(CardManager.instance.wordExist.validWords.Contains(word.ToLower()))
+            {
+                TrueWord();
+            }
+            else
+            {
+                UIManager.Instance.message.text = UIManager.Instance.wrongWord;
+                UIManager.Instance.message.gameObject.SetActive(true);
+
+                Debug.Log(UIManager.Instance.wrongWord);
+
+                if(CardManager.instance.cPU.isRoundLose)
+                {
+                    UIManager.Instance.isTimerRunning = false;
+
+                    CardManager.instance.ResetCards();
+
+                    foreach (var card in UIManager.Instance.cards)
+                    {
+                        card.transform.SetAsLastSibling();
+                        card.gameObject.SetActive(false);
+                    }
+
+                    UIManager.Instance.timer = CardManager.instance.roundTimer;;
+
+                    NextRound(CardManager.instance.nextRoundTimer);
+                }
+                else
+                {
+                    isRoundLose = true;
+                }
+            }
         }
         else
         {
@@ -35,38 +66,16 @@ public class Player : MonoBehaviour
 
     public void TrueWord()
     {
-        if (time < CardManager.instance.cPU.time)
-        {
-            totalCollectedCards += selectedLetters;
-            UIManager.Instance.playerCards.text = totalCollectedCards.ToString();
+        CardManager.instance.cPU.StopCPU();
 
-            UIManager.Instance.message.text = UIManager.Instance.correctWord;
-            UIManager.Instance.message.gameObject.SetActive(true);
-            Debug.Log(UIManager.Instance.correctWord);
-        }
-        else
-        {
-            char[] letters = CardManager.instance.cPU.cpuWord.ToCharArray();
-            if(CardManager.instance.cPU.isCPUTrue)
-            {
-                UIManager.Instance.cpuTotalCards += letters.Length;
-                UIManager.Instance.cpuCards.text = UIManager.Instance.cpuTotalCards.ToString();
+        totalCollectedCards += selectedLetters;
+        UIManager.Instance.playerCards.text = totalCollectedCards.ToString();
 
-                UIManager.Instance.message.text = UIManager.Instance.wrongWord;
-                UIManager.Instance.message.gameObject.SetActive(true);
-                Debug.Log(UIManager.Instance.wrongWord);
-            }
-            else
-            {
-                totalCollectedCards += selectedLetters;
-                UIManager.Instance.playerCards.text = totalCollectedCards.ToString();
-                UIManager.Instance.message.text = UIManager.Instance.correctWord;
-                UIManager.Instance.message.gameObject.SetActive(true);
-                Debug.Log(UIManager.Instance.correctWord);
-            }
-        }
+        UIManager.Instance.message.text = UIManager.Instance.correctWord;
+        UIManager.Instance.message.gameObject.SetActive(true);
+        Debug.Log(UIManager.Instance.correctWord);
 
-        System.Collections.Generic.List<string> stringList = new();
+        List<string> stringList = new();
         for (int i = 0; i < selectedLetters; i++)
         {
             stringList.Add(UIManager.Instance.playerWord[i].text);
@@ -87,7 +96,7 @@ public class Player : MonoBehaviour
         UIManager.Instance.timer = CardManager.instance.roundTimer;;
         UIManager.Instance.isTimerRunning = false;
 
-        NextRound(3);
+        NextRound(CardManager.instance.nextRoundTimer);
     }
 
     public void NextRound(float sec)

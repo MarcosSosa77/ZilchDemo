@@ -37,35 +37,34 @@ public class CardManager : MonoBehaviour
         if(!UIManager.Instance.isTimerRunning)
             return;
 
-        string word = string.Empty;
-        for (int i = 0; i < randomLetters.Count; i++)
-        {
-            word += randomLetters[i];
-        }
         if(wordExist.validWords.Count == 0)
         {
-            WordCheckingFalse();
-            UIManager.Instance.message.text = UIManager.Instance.zilchPlayer;
+            UIManager.Instance.isTimerRunning = false;
+
+            player.totalCollectedCards += 8;
+            UIManager.Instance.playerCards.text = player.totalCollectedCards.ToString();
+
+            UIManager.Instance.message.text = UIManager.Instance.zilchRound;
             UIManager.Instance.message.gameObject.SetActive(true);
+
+            Debug.Log(UIManager.Instance.zilchRound);
+
+            randomLetters.Clear();
+
+            player.NextRound(nextRoundTimer);
         }
-        else
+        else if(cPU.isRoundLose)
         {
-            WordCheckingTrue();
+            UIManager.Instance.isTimerRunning = false;
+
             UIManager.Instance.message.text = UIManager.Instance.wrongWord;
             UIManager.Instance.message.gameObject.SetActive(true);
-        }  
-        UIManager.Instance.isTimerRunning = false;
-        UIManager.Instance.timer = roundTimer;;
-        player.NextRound(nextRoundTimer);
-        randomLetters = new();
-        UIManager.Instance.cards = new();
-        foreach (var item in UIManager.Instance.tableCards)
-        {
-            item.gameObject.SetActive(false);
-        }
-        for (int i = 0; i < UIManager.Instance.tableCards.Count; i++)
-        {
-            UIManager.Instance.cards.Add(UIManager.Instance.tableCards[i]);
+
+            Debug.Log(UIManager.Instance.wrongWord);
+
+            ResetCards();
+
+            player.NextRound(nextRoundTimer);
         }
     }
 
@@ -143,43 +142,8 @@ public class CardManager : MonoBehaviour
             cPU.CPUPlay();
             UIManager.Instance.cards.Clear();
             UIManager.Instance.isTimerRunning = true;
+            player.isRoundLose = false;
         }
-    }
-
-    public void WordCheck(System.Action success, string words)
-    {
-        //isValid = false;
-        // if (words.Contains('?'))
-        // {
-        //     List<string> expandedWords = wordChecker.ExpandWordWithWildcards(words);
-        //     Debug.Log("expandedWords - " + expandedWords.Count);
-        //     foreach (string word in expandedWords)
-        //     {
-        //         isValid = wordChecker.dictionary.Contains(word.ToLower());
-        //         Debug.Log($"Is '{word}' valid? {isValid}");
-        //         if (isValid)
-        //         {
-        //             success.Invoke();
-        //             return;
-        //         }
-        //     }
-        //     Debug.Log("no possible word");
-        //     UIManager.Instance.message.text = UIManager.Instance.wrongWord;
-        //     UIManager.Instance.message.gameObject.SetActive(true);
-        //     Debug.Log(UIManager.Instance.wrongWord);
-        // }
-        // else
-        // {
-            if (wordExist.validWords.Contains(words.ToLower()))
-                success.Invoke();
-            else
-            {
-                Debug.Log("no possible word");
-                UIManager.Instance.message.text = UIManager.Instance.wrongWord;
-                UIManager.Instance.message.gameObject.SetActive(true);
-                Debug.Log(UIManager.Instance.wrongWord);
-            }   
-        //}
     }
 }
 
