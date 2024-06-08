@@ -2985,7 +2985,8 @@ MonoBehaviour:
   - name: SHUFFLE_AND_DELIVER
     sounds:
     - {fileID: 8300000, guid: f7b080033ea29354f9e3f3d8d580b7bb, type: 3}
-  musicList: []
+  musicList:
+  - {fileID: 8300000, guid: deb9a1a9e0a014fd9bffa192341de7c6, type: 3}
   audSource: {fileID: 592384418}
   buttonAudioSource: {fileID: 592384420}
   musicAudioSource: {fileID: 592384421}

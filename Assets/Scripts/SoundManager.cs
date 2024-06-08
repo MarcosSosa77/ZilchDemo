@@ -35,6 +35,8 @@ public class SoundManager : MonoBehaviour
 
         musicAudioSource.loop = true;
         musicAudioSource.volume = 0.05f;
+
+        PlayMusic(0);
     }
 
     //Sound type and volume
@@ -88,7 +90,6 @@ public class SoundManager : MonoBehaviour
         if (index < 0 || index >= musicList.Length) return;
         musicAudioSource.clip = musicList[index];
         musicAudioSource.Play();
-
     }
 
     public void StopMusic()
