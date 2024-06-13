@@ -128,6 +128,7 @@ public class CPU : MonoBehaviour
 
         if(CardManager.instance.player.isRoundLose)
         {
+            UIManager.Instance.isTimerRunning = false;
             UIManager.Instance.message.text = UIManager.Instance.cpuWrongWordPlayerWrongWord;
             UIManager.Instance.message.gameObject.SetActive(true);
             Debug.Log(UIManager.Instance.cpuWrongWordPlayerWrongWord);
